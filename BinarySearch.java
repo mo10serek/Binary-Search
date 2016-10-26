@@ -12,16 +12,19 @@ import java.io.InputStreamReader;
 
 public class BinarySearch {
 
-public static int[] Sort(int[] array){
+	public static int[] Sort(int[] array){
 		
-		//this function uses a "bubble sort" to sort an array in ascending order		
+		//this function uses a "bubble sort" to sort an array in ascending order
+		
+		int index;
 	    boolean flag = true;
-	    int index;
 	    int temp; //holds a number when switching two objects
-    	
-	           flag = false;    //sets flag to false until all possible swaps occur
-	           for(index = 0;  index < array.length -1;  index++) {	        	   
 
+	    while(flag) {
+	    	
+	           flag = false;    //sets flag to false until all possible swaps occur
+	           for(index = 0;  index < array.length -1;  index++) {
+	        	   
 	               if (array[index] > array[index + 1])
 	               {
 	            	   //swaps the two items if the first is larger than the second
@@ -29,98 +32,77 @@ public static int[] Sort(int[] array){
 	                   array[index] = array[index + 1];
 	                   array[index + 1] = temp;
 	                   flag = true;
-	                   
-	               }                
-	           
-	           if (flag) {
-	        	   array = Sort(array); //sorts the array
-	           }
-	           
-	           
+	               } 
+	               
+	            } 
 	      } 
-	       	
+		
 		return array;
 	}
+	
+	public static int Search(int[] array, int first, int back, int key){
+	//this function uses a "bubble sort" to sort an array in ascending order		
 
-	public static boolean Search(int[] array, int key){
-		
-		//this function searches an array for a value using binary search.
-		
-		boolean found = false; //if the key is found in the array, this is returned as true. false by default.		
-		int position;
-	    int lowerBound = 0;
-	    int upperBound = array.length;	    
-	    position = (lowerBound + upperBound) / 2;	     
-	    
-	    //lowerBound will eventually NOT be <= upperBound if the key is not found.
-	    while((array[position] != key) && (lowerBound <= upperBound))
-	    {	    	 
-	        if (array[position] > key)
-	        {	        	 
-	        	upperBound = position - 1;        	 
-	        } else {
-	        	lowerBound = position + 1;	             
-	        }	        
-	        position = (lowerBound + upperBound) / 2;
-	     }
+		if (first < back) {
+			int mid =  (back + first) / 2;  // Compute mid point.
+			if (key < array[mid]) {
+				return Search(array, first, mid, key);  // repeat search in bottom half.
+			} else if (key > array[mid]) {
+				return Search(array, mid + 1, back, key);  // Repeat search in top half.
+			} else {
+				return mid;
+			}
+		}
 
-	     if (lowerBound <= upperBound)
-	     {
-	           found = true;
-	     }
-	     
-		return found;
+		return -(first + 1);  // Failed to find key
 
 	}
+	
+	
 	
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		//creates an array of 10 items
 
-				int[] numberList = new int[10];
-			
-				//fills said array with 250 random numbers between 1 and 10
-				for (int counter = 0; counter < numberList.length; counter++){
-					numberList[counter] = (int)(Math.random()*10 + 1);
-					//System.out.println(numberList[counter]); //for debugging, remove later					
+		int[] numberList = new int[250];
+	
+		//fills said array with 250 random numbers between 1 and 10
+		for (int counter = 0; counter < numberList.length; counter++){
+			numberList[counter] = (int)(Math.random()*250 + 1);
+			//System.out.println(numberList[counter]); //for debugging, remove later					
 
-				}				
+		}				
 
-				System.out.println("RANDOMIZED ARRAY:");
+		System.out.println("RANDOMIZED ARRAY:");
 
-				for (int counter = 0; counter < numberList.length; counter++){
+		int first = 0;
+		int back = 250;
+		
+		for (int counter = 0; counter < numberList.length; counter++){
 
-					//prints the unsorted array
-					System.out.println(numberList[counter]);
+			//prints the unsorted array
+			System.out.println(numberList[counter]);
 
-				}
+		}
+		
+		numberList = Sort(numberList); //sorts the array
+		
+		System.out.println("ORDERED ARRAY:");
+		for (int counter = 0; counter < numberList.length; counter++){
+			//prints the sorted array
+			System.out.println(numberList[counter]);
+		}
+		
+		//initializes input stream
+		InputStreamReader r = new InputStreamReader(System.in);
+		BufferedReader br = new BufferedReader(r);
 				
-				
-				numberList = Sort(numberList); //sorts the array
-				
-				System.out.println("ORDERED ARRAY:");
-
-				for (int counter = 0; counter < numberList.length; counter++){
-					//prints the sorted array
-					System.out.println(numberList[counter]);
-				}
-				
-				//initializes input stream
-				InputStreamReader r = new InputStreamReader(System.in);
-				BufferedReader br = new BufferedReader(r);
-				
-				int key; //integer to hold user's search
-				System.out.println("Enter a number to search for in the array (Between 1 and 250)");
-				key = Integer.parseInt(br.readLine());		
-
-				boolean found = Search(numberList, key); //searches array "numberList" for user's input
-				
-				if (found){
-					System.out.println("The item you searched for is in the array!");
-
-				} else {
-					System.out.println("The item you searched for is not in the array!");
-
-				}
+		int key; //integer to hold user's search
+		System.out.println("Enter a number to search for in the array (Between 1 and 250)");
+		key = Integer.parseInt(br.readLine());		
+		
+		int numberFound = Search(numberList , first, back, key); //sorts the array
+		
+		System.out.println("We found your number. it is on " + numberFound + " in the list");
+		
 	}
-
 }
